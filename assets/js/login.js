@@ -28,14 +28,17 @@ $(function () {
     var layer=layui.layer
     $('#form_reg').on('submit', function (e) {
         e.preventDefault()
+        console.log($('.reg-box [name=username]').val());
+        console.log($('.reg-box [name=password]').val());
         $.ajax({
             method: 'post',
-            url: '/api/register',
+            url: '/api/reguser',
             data: {
                 username:$('.reg-box [name=username]').val(),
                 password:$('.reg-box [name=password]').val()
             },
             success: function (res) {
+                // console.log(res);
                 if (res.status !== 0) {
                     return layer.msg(res.message)
                 }
@@ -46,18 +49,23 @@ $(function () {
         })
     })
     //5.登录功能
-    $('#form_login').on(function (e) {
+    $('#form_login').submit(function (e) {
         e.preventDefault()
+        // console.log(1);
         $.ajax({
             method: 'post',
             url: '/api/login',
             data: $(this).serialize(),
             success: function (res) {
+                //校验返回状态
                 if (res.status !== 0) {
                     return layer.msg(res.message)
                 }
-                layer.msg('恭喜你,登录成功')
+                //提交信息,保存token
+                layer.msg('恭喜您,登录成功')
+                //保存token
                 localStorage.setItem('token', res.token)
+                //跳转
                 location.href='/index.html'
             }
         })
